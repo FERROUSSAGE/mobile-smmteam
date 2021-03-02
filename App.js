@@ -1,21 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
+
+import { Login } from './screens/index';
+
+const customFonts = {
+    'neometric-bold': require('./assets/fonts/Neometric-Bold.ttf'),
+    'neometric-medium': require('./assets/fonts/Neometric-Medium.ttf'),
+    'neometric-regular': require('./assets/fonts/Neometric-Regular.ttf')
+};
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    const [isReady, setIsReady] = React.useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    const loadAppAplication = async () => {
+        await Font.loadAsync(customFonts);
+        setIsReady(true);
+    }
+
+    React.useEffect(() => {
+        loadAppAplication();
+    }, []);
+
+    if (isReady) {
+        return (
+            <Login/>
+        );
+    } else {
+        return <AppLoading/>
+    }
+}
