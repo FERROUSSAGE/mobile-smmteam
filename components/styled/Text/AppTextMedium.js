@@ -5,5 +5,5 @@ export const AppTextMedium = styled.Text`
     font-style: normal;
     font-weight: 500;
     font-size: ${props => props.size || '14px'};
-    line-height: ${props => props.lineHeight };
+    color: ${props => props.color || 'white'};
 `;
