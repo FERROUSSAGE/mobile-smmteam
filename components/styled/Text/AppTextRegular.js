@@ -1,9 +1,9 @@
 import styled from 'styled-components/native';
 
-export const AppTextBold = styled.Text`
-    font-family: neometric-bold;
+export const AppTextRegular = styled.Text`
+    font-family: neometric-regular;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     font-size: ${props => props.size || '14px'};
     color: ${props => props.color || 'white'};
 `;

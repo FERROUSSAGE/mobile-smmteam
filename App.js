@@ -3,7 +3,7 @@ import React from 'react';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 
-import { Login } from './screens/index';
+import AppNavigator from './navigation/AppNavigator';
 
 const customFonts = {
     'neometric-bold': require('./assets/fonts/Neometric-Bold.ttf'),
@@ -13,6 +13,7 @@ const customFonts = {
 
 export default function App() {
     const [isReady, setIsReady] = React.useState(false);
+
 
     const loadAppAplication = async () => {
         await Font.loadAsync(customFonts);
@@ -25,7 +26,7 @@ export default function App() {
 
     if (isReady) {
         return (
-            <Login/>
+            <AppNavigator />
         );
     } else {
         return <AppLoading/>

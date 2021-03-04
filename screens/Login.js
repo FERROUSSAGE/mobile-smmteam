@@ -26,10 +26,11 @@ const Eye = styled.Image`
 `;
 
 
-const Login = () => {
+const Login = ({ navigation }) => {
     const [passwordVisible, setPasswordVisible] = React.useState(true);
 
     const visibleHandler = () => setPasswordVisible(!passwordVisible); 
+    const goToHomeHandler = () => navigation.navigate('HomeContainer');
 
     return <Flex flex={1}>
         <ImageBackground 
@@ -44,7 +45,7 @@ const Login = () => {
                     <Container>
                         <AppTextMedium size='18px'
                             color='white'
-                        >Email:</AppTextMedium>
+                        >Login:</AppTextMedium>
                         <Input/>
                         <AppTextMedium size='18px'
                             color='white'
@@ -53,12 +54,12 @@ const Login = () => {
                             alignItems='center'
                             style={{ position: 'relative' }}
                         >
-                            <Input secureTextEntry={passwordVisible} style={{ position: 'relative', elevation: -10, zIndex: 10 }}/>
+                            <Input secureTextEntry={passwordVisible}/>
                             <Button onPress={visibleHandler}
                                 style={{ position: 'absolute', right: -10, top: -10}}>
                                 {!passwordVisible
-                                    ? <Eye resizeMode='center' source={require('../assets/images/login/eye.png')}/> 
-                                    : <Eye resizeMode='center' source={require('../assets/images/login/eye-slash.png')} />}
+                                    ? <Eye resizeMode='center' source={require('../assets/icons/eye.png')}/> 
+                                    : <Eye resizeMode='center' source={require('../assets/icons/eye-slash.png')} />}
                             </Button>
                         </Flex>
                         <Flex alignItems='center'
@@ -68,6 +69,7 @@ const Login = () => {
                                 width='165px'
                                 height='50px'
                                 shadow
+                                onPress={goToHomeHandler}
                             >
                                 <AppTextMedium style={{ paddingTop: 16, paddingBottom: 16, textAlign: 'center' }} >Войти</AppTextMedium>
                             </Button>
