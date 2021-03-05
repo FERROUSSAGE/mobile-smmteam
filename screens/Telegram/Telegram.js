@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Container, Flex } from '../components/styled';
+import { Container, Flex } from '../../components/styled';
 
 const Telegram = () => {
     return (
