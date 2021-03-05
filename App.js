@@ -1,9 +1,10 @@
 import React from 'react';
-
+import { SafeAreaView, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 
 import AppNavigator from './navigation/AppNavigator';
+import { Flex } from './components/styled';
 
 const customFonts = {
     'neometric-bold': require('./assets/fonts/Neometric-Bold.ttf'),
@@ -26,7 +27,11 @@ export default function App() {
 
     if (isReady) {
         return (
-            <AppNavigator />
+            <Flex flex={1}>
+                <SafeAreaView style={{  }}/>
+                <StatusBar barStyle={'dark-content'} />
+                <AppNavigator/>
+            </Flex>
         );
     } else {
         return <AppLoading/>
