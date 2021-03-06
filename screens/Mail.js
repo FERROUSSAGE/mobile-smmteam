@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import styled from 'styled-components';
+import { ResellerScreen } from '.';
 
 import { Container, Flex, Input, Button, AppTextBold } from '../components/styled';
 import { w } from '../utils/consts';
@@ -20,13 +21,15 @@ const Mail = () => {
 
     const [toMail, setToMail] = React.useState('');
     const [caption, setCaption] = React.useState('');
-    const [pattern, setPattern] = React.useState({text: patterns.incorrect, index: 0});
+    const [pattern, setPattern] = React.useState(null);
+    const [html, setHtml] = React.useState('');
 
     const setMailHandler = (text) => setToMail(text);
     const setCaptionHandler = (text) => setCaption(text);
     const setPatternHandler = (index) => index === 0
-     ? setPattern({text: patterns.incorrect, index: 0})
-     : setPattern({text: patterns.endDay, index: 1}); 
+     ? (setHtml(patterns.incorrect), setPattern(index))
+     : (setHtml(patterns.endDay), setPattern(index)); 
+    const setHtmlHandler = (text) => setHtml(text); 
     
 
     return (
@@ -69,39 +72,38 @@ const Mail = () => {
                     returnKeyType='none'
 
                     style={{ marginBottom: 30 }}
-                    value={pattern.text}
+                    placeholder='Начните вводить текст...'
+                    onChangeText={setHtmlHandler}
+                    value={html}
                 />
                 <Flex 
                     direction='row'
-                    justifyContent='space-between'
+                    justifyContent={w <= 320 ? 'center' : 'space-between'}
+                    alignItems='center'
                     style={{ marginBottom: 15 }}
                 >
                     <Button
-                        color={pattern.index === 0 ? 'blue' : '2px solid'}
-                        borderColor={pattern.index === 1 && 'rgba(94, 80, 255, 0.5)'}
-                        width='155px'
+                        color={pattern === 0 ? 'blue' : '2px solid'}
+                        borderColor={pattern === 1 ? 'rgba(94, 80, 255, 0.5)' : pattern === 0 ? '' : 'rgba(94, 80, 255, 0.5)'}
                         style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 12, paddingRight: 15 }}
                         onPress={() => setPatternHandler(0)}
                     >
                         <AppTextBold
                             size='11px'
-                            style={{ width: 135 }}
-                            color={pattern.index === 1 && 'rgba(0, 0, 0, 0.21)'}
+                            color={pattern === 1 ? 'rgba(0, 0, 0, 0.21)' : pattern === 0 ? '' : 'rgba(0, 0, 0, 0.21)'}
                         >
                             Некорректный заказ
                         </AppTextBold>
                     </Button>
                     <Button
-                        color={pattern.index === 1 ? 'blue' : ''}
-                        borderColor={pattern.index === 0 && 'rgba(94, 80, 255, 0.5)'}
-                        width='155px'
+                        color={pattern === 1 ? 'blue' : ''}
+                        borderColor={pattern === 0 ? 'rgba(94, 80, 255, 0.5)' : pattern === 1 ? '' : 'rgba(94, 80, 255, 0.5)'}
                         style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 15, paddingRight: 10}}
                         onPress={() => setPatternHandler(1)}
                     >
                         <AppTextBold
                             size='11px'
-                            style={{ width: 124 }}
-                            color={pattern.index === 0 && 'rgba(0, 0, 0, 0.21)'}
+                            color={pattern === 0 ? 'rgba(0, 0, 0, 0.21)' : pattern === 1 ? '' : 'rgba(0, 0, 0, 0.21)'}
                         >
                             Конец рабочего дня
                         </AppTextBold>
@@ -114,13 +116,14 @@ const Mail = () => {
                     style={{ 
                         alignItems: 'center',
                         marginBottom: 13, 
-                        marginLeft: w / 4.6,
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
                         paddingTop: 20, 
                         paddingBottom: 20, 
                         paddingLeft: 40, 
                         paddingRight: 40
                     }}
-                    onPress={() => Alert.alert(toMail + ' ' + caption)}
+                    onPress={() => Alert.alert(toMail + ' ' + caption + '' + html)}
                 >
                     <AppTextBold
                         size='13px'

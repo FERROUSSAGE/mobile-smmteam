@@ -1,6 +1,7 @@
 import React from 'react';
 import Svg, { Path, Rect, Circle } from 'react-native-svg';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { ifIphoneX } from 'react-native-iphone-x-helper';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -109,9 +110,14 @@ const HomeNavigator = () => (
             style: {
                 backgroundColor: Colors.primaryHome,
                 alignItems: 'center',
-                height: 85,
+                height: 75,
                 borderTopLeftRadius: 15,
-                borderTopRightRadius: 15
+                borderTopRightRadius: 15,
+                ...ifIphoneX({
+                    paddingBottom: 17
+                }, {
+                    paddingBottom: 10
+                }),
             },
             labelStyle: styles.bottomLabel,
             activeTintColor: '#FAC1FF',

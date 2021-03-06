@@ -28,7 +28,7 @@ export default function App() {
     if (isReady) {
         return (
             <Flex flex={1}>
-                <SafeAreaView style={{  }}/>
+                <SafeAreaView />
                 <StatusBar barStyle={'dark-content'} />
                 <AppNavigator/>
             </Flex>

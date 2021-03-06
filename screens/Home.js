@@ -109,7 +109,7 @@ const Home = () => {
             </Wrapper>
             <DevelopersText
                 size='9px'
-                // color='rgba(150, 150, 150, 0.51)'
+                color='rgba(150, 150, 150, 0.51)'
             >
                 Developers of Uglovskoy Ilya | Panova Svetlana Design by @svpanova_design
             </DevelopersText>

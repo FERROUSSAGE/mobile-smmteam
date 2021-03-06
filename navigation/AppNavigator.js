@@ -21,7 +21,6 @@ const AppNavigator = () => {
                 screenOptions={{
                     swipeEnabled: false
                 }}
-                drawerPosition='left'
             >
                 <MainStack.Screen 
                     name='Login'
