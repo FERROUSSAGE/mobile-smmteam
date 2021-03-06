@@ -15,12 +15,13 @@ const whiteTheme = {
 
 const AppNavigator = () => {
     return (
-        <NavigationContainer theme={whiteTheme}>
+        <NavigationContainer theme={whiteTheme} >
             <MainStack.Navigator
                 initialRouteName='Login'
                 screenOptions={{
                     swipeEnabled: false
                 }}
+                drawerPosition='left'
             >
                 <MainStack.Screen 
                     name='Login'

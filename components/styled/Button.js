@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
+
 import { TouchableOpacity } from 'react-native';
+
+import { Colors } from '../../utils/consts';
 
 const Content = styled.View`
     background: ${props => props.color === 'blue'
-        ? '#5E50FF' : props.color === 'pink'
-            ? '#B250FF' : 'transparent'};
+        ? Colors.blue : props.color === 'pink'
+            ? Colors.pink : 'transparent'};
     border-radius: 15px;
     border: 2px solid transparent;
     ${props => props.borderColor && 'border-color: rgba(94, 80, 255, 0.5)'}; 

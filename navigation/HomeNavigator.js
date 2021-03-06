@@ -5,7 +5,9 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { HomeScreen, ResellerScreen, MailScreen, OrdersScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
+import ResellerNavigator from './ResellerNavigator';
+
+import { HomeScreen, MailScreen, OrdersScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
 import { Colors } from '../utils/consts';
 
 const Tab = createBottomTabNavigator();
@@ -44,20 +46,6 @@ const _HomeStack = () => (
 
                     </TouchableOpacity>
                 }
-            }}
-        />
-    </Stack.Navigator>
-); 
-
-const _ResellerStack = () => (
-    <Stack.Navigator>
-        <Stack.Screen
-            name='Reseller'
-            component={ResellerScreen}
-            options={{ 
-                title: 'Реселлеры',
-                headerTitleAlign: 'left',
-                headerTitleStyle: styles.title
             }}
         />
     </Stack.Navigator>
@@ -182,7 +170,7 @@ const HomeNavigator = () => (
         />
         <Tab.Screen
             name='Reseller'
-            component={_ResellerStack}
+            children={ResellerNavigator}
             options={{
                 title: 'Реселлеры',
                 tabBarIcon: () => <Svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">

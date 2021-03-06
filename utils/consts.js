@@ -5,7 +5,10 @@ const Colors = {
     primaryButton: '#5E50FF',
     secondaryButton: '#B250FF',
     titleStack: '#747474',
-    primaryHome: '#D39CFE'
+    primaryHome: '#D39CFE',
+
+    blue: '#5E50FF',
+    pink: '#B250FF'
 };
 
 
