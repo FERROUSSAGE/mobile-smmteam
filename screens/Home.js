@@ -12,6 +12,7 @@ import { w, Colors } from '../utils/consts';
 const HeaderWrapper = styled.View`
     background: rgba(127, 5, 255, 0.26);
     box-shadow: 0px 2px 4px rgba(199, 80, 255, 0.50);
+    elevation: 4;
     border-radius: 15px;
 `;
 

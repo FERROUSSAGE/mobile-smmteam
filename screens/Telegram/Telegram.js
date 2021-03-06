@@ -1,28 +1,26 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Container, Flex } from '../../components/styled';
+import Chat from '../../components/Chat';
+import { Flex } from '../../components/styled';
 
 const data = [
     {
-        name: 'Александр Волчанский',
-        text: 'Привет, у меня есть пару вопросов'
+        nickname: 'Александр Волчанский',
+        messages: ['Привет, у меня есть пару вопросов, собственно да']
     },
     {
-        name: 'Снегирь Вологодский',
-        text: 'Чик-чирик'
+        nickname: 'Снегирь Вологодский',
+        messages: ['Чик-чирик']
     }
 ];
 
 
 
-const Telegram = () => {
+const Telegram = ({ navigation }) => {
     return (
         <Flex
-            flex={1} 
+            flex={1}
         >
-            <Container>
-                
-            </Container>
+            <Chat data={data} navigation={navigation} />
         </Flex>
     );
 };

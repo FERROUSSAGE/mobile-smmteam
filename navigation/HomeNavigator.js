@@ -81,14 +81,31 @@ const _OrdersStack = () => (
 ); 
 
 const _TelegramStack = () => (
-    <Stack.Navigator initialRouteName='TelegramDialogs'>
+    <Stack.Navigator
+        initialRouteName='TelegramDialogs'
+        screenOptions={{ 
+            cardStyle: {
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 1,
+                },
+                shadowOpacity: 0.22,
+                shadowRadius: 2.22,
+                
+                elevation: 3,
+            }
+        }}
+    >
         <Stack.Screen
             name='TelegramDialogs'
             component={TelegramScreen}
             options={{
                 title: 'Telegram - Чат',
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title 
+                headerTitleStyle: styles.title
             }}
         />
         <Stack.Screen

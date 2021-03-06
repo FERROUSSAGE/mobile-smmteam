@@ -1,7 +1,6 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import styled from 'styled-components';
-import { ResellerScreen } from '.';
 
 import { Container, Flex, Input, Button, AppTextBold } from '../components/styled';
 import { w } from '../utils/consts';
@@ -118,8 +117,8 @@ const Mail = () => {
                         marginBottom: 13, 
                         marginLeft: 'auto',
                         marginRight: 'auto',
-                        paddingTop: 20, 
-                        paddingBottom: 20, 
+                        paddingTop: 16, 
+                        paddingBottom: 16, 
                         paddingLeft: 40, 
                         paddingRight: 40
                     }}

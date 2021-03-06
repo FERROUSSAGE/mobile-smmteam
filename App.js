@@ -5,6 +5,7 @@ import AppLoading from 'expo-app-loading';
 
 import AppNavigator from './navigation/AppNavigator';
 import { Flex } from './components/styled';
+import { h } from './utils/consts';
 
 const customFonts = {
     'neometric-bold': require('./assets/fonts/Neometric-Bold.ttf'),
@@ -27,7 +28,10 @@ export default function App() {
 
     if (isReady) {
         return (
-            <Flex flex={1}>
+            <Flex 
+                flex={1}
+                style={{ minHeight: h }}
+            >
                 <SafeAreaView />
                 <StatusBar barStyle={'dark-content'} />
                 <AppNavigator/>

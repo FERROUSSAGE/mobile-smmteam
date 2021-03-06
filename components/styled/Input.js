@@ -12,4 +12,5 @@ export const Input = styled.TextInput`
     ${props => props.shadow && 'box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25)'};
     border-radius: ${props => props.borderRadius || '10px'};
     padding: ${props => props.padding || '17px 22px'};
+    elevation: 5;
 `;
