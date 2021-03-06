@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { AppTextMedium, AppTextRegular } from '../components/styled';
 import { ScrollView } from 'react-native';
 
-import { w } from '../utils/consts';
+import { w, Colors } from '../utils/consts';
 
 const HeaderWrapper = styled.View`
     background: rgba(127, 5, 255, 0.26);
@@ -28,7 +28,7 @@ const ContentTitle = styled(AppTextRegular)`
 const ContentWrapper = styled.View`
   width: 90%;
   margin: 0 auto;
-  background: #D29CFE;
+  background: ${Colors.primaryHome};
   padding: 5px;
 
   borderBottomLeftRadius: 18px;
@@ -109,7 +109,7 @@ const Home = () => {
             </Wrapper>
             <DevelopersText
                 size='9px'
-                color='rgba(150, 150, 150, 0.51)'
+                // color='rgba(150, 150, 150, 0.51)'
             >
                 Developers of Uglovskoy Ilya | Panova Svetlana Design by @svpanova_design
             </DevelopersText>

@@ -1,9 +1,12 @@
 import React from 'react';
-import Svg, { Path, Rect } from 'react-native-svg';
+import Svg, { Path, Rect, Circle } from 'react-native-svg';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import { HomeScreen, ResellerScreen, MailScreen, OrdersScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
-import { StyleSheet } from 'react-native';
+import { Colors } from '../utils/consts';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -11,12 +14,12 @@ const Stack = createStackNavigator();
 const styles = StyleSheet.create({
     title: {
         fontSize: 24,
-        color: '#747474',
+        color: Colors.titleStack,
         fontFamily: 'neometric-bold',
         fontWeight: '600'
     },
     bottomLabel: {
-        fontSize: 12,
+        fontSize: 10,
         fontFamily: 'neometric-medium',
         fontWeight: '500'
     }
@@ -30,7 +33,17 @@ const _HomeStack = () => (
             options={{ 
                 title: 'Главная',
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title
+                headerTitleStyle: styles.title,
+                headerLeft: () => {
+                    <TouchableOpacity style={{ backgroundColor: 'red' }}  onPress={() => {}}>
+                        <Svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <Circle cx="2" cy="2" r="2" fill="#777676"/>
+                            <Circle cx="2" cy="10" r="2" fill="#777676"/>
+                            <Circle cx="2" cy="18" r="2" fill="#777676"/>
+                        </Svg>
+
+                    </TouchableOpacity>
+                }
             }}
         />
     </Stack.Navigator>
@@ -106,8 +119,11 @@ const HomeNavigator = () => (
         initialRouteName='Home'
         tabBarOptions={{
             style: {
-                backgroundColor: '#D39CFE',
-                alignItems: 'center'
+                backgroundColor: Colors.primaryHome,
+                alignItems: 'center',
+                height: 85,
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15
             },
             labelStyle: styles.bottomLabel,
             activeTintColor: '#FAC1FF',

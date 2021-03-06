@@ -21,7 +21,9 @@ const Input = styled.TextInput`
 `;
 
 const Eye = styled.Image`
-    bottom: 5px;
+    position: absolute;
+    right: 15px;
+    bottom: -25px;
     width: 30px;
     height: 30px;
     transform: scale(2.5);
@@ -102,12 +104,14 @@ const Login = ({ navigation }) => {
                                     height='50px'
                                     shadow
                                     onPress={goToHomeHandler}
+
+                                    style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 16, paddingRight: 16 }}
                                 >
                                     <AppTextMedium
-                                        style={{ paddingTop: 16, paddingBottom: 16, textAlign: 'center' }}
+                                        style={{ textAlign: 'center' }}
                                     >
                                         Войти
-                                </AppTextMedium>
+                                    </AppTextMedium>
                                 </Button>
                             </Flex>
                         </Container>
