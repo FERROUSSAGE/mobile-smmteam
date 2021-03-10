@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, FlatList } from 'react-native';
 import styled from 'styled-components/native';
 
 import Svg, { Path } from 'react-native-svg';
-import { AppTextBold, AppTextMedium, Flex, Container } from '../../components/styled';
+import { AppTextBold, Flex, Container } from '../../components/styled';
+import { w, h } from '../../utils/consts';
 
 const SendInput = styled.TextInput`
     width: 85%;
@@ -11,51 +12,68 @@ const SendInput = styled.TextInput`
     font-size: 14px;
 `;
 
+const Message = styled.View`
+    background: ${props => props.color ? 'rgba(72, 248, 205, 0.87)' : 'rgba(94, 80, 255, 0.87)'};
+    border-radius: 10px;
+
+    width: ${w * 0.7}px;
+    padding: 15px 10px;
+    margin: ${props => props.position ? `5px 0 5px ${w * 0.2}px` : `5px ${w * 0.2}px 5px 0`};
+`;
+
+const substrMessage = (message) => message.split(': ')[1];
+
 const isOperatorMessage = (message) => {
     if(!message){
         return;
     }
-
     return message.split(':')[0] === 'Оператор' ? true : false;
-}
-
-const Item = (messages) => {
-
 }
 
 const TelegramDetails = ({ route }) => {
     const { nickname, chatId, messages } = route.params;
 
-    const [isFocused, setFocused] = React.useState(false);
-
     const sendMessageHandler = () => {
-        setFocused(false);
         Keyboard.dismiss();
     };
-    const focusHandler = () => setFocused(true);
 
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column'}}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+            style={{ flex: 1 }}
         >
             <Container
-                style={{ flex: isFocused ? 0.5 : 10 }}
+                style={{ flex: 1 }}
             >
-
+                <FlatList
+                    data={messages}
+                    renderItem={({item}) => {
+                        const isOperator = isOperatorMessage(item);
+                        return (
+                            <Message
+                                position={isOperator}
+                                color={isOperator}
+                            >
+                                <AppTextBold
+                                    color='white'
+                                    size='11px'
+                                >{substrMessage(item)}</AppTextBold>
+                            </Message>
+                        ); 
+                    }}
+                    keyExtractor={item => item.toString(16)}
+                />
             </Container>
             <Flex
-                flex={1}
                 direction='row'
                 alignItems='center'
                 justifyContent='center'
-                style={{ backgroundColor: '#DADADA' }}
+                style={{ backgroundColor: '#DADADA', height: h * 0.07 }}
             >
                 <SendInput
                     placeholder='Введите сообщение'
-                    onFocus={focusHandler}
-                    multiline={true}
                 />
                 <TouchableOpacity
                     onPress={sendMessageHandler}

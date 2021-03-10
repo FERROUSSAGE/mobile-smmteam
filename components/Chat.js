@@ -4,14 +4,15 @@ import { TouchableOpacity, FlatList} from 'react-native';
 
 import { Container, Flex, AppTextBold } from './styled';
 
-import { cutString, getHash } from '../utils/functions';
-
-let cutAvatarText = '';
+import { cutString, getHash, nameSurnameAbbreviation } from '../utils/functions';
 
 const Avatar = styled.View`
     width: 55px;
     height: 55px;
     border-radius: 50px;
+
+    justify-content: center;
+    align-items: center;
 
     backgroundColor: ${props => props.color || '#D29CFE'};
 `;
@@ -23,15 +24,7 @@ const ItemContent = styled(Flex)`
     borderBottomWidth: 2px; 
 `;
 
-const avatarText = (string) =>{
-    let result = '';
-    string.split(' ').forEach((item) => result += item[0]);
-    return result;
-} 
-
 const Item = ({ nickname, text }) => {
-
-    cutAvatarText = avatarText(nickname);
 
     return (
         <Flex
@@ -41,9 +34,8 @@ const Item = ({ nickname, text }) => {
             <Avatar color={getHash()}>
                 <AppTextBold
                     size='15px'
-                    style={{ textAlign: 'center', lineHeight: 53 }}
                 >
-                    {cutAvatarText}
+                    {nameSurnameAbbreviation(nickname)}
                 </AppTextBold>
             </Avatar>
             <ItemContent
@@ -68,7 +60,7 @@ const Item = ({ nickname, text }) => {
 
 const Chat = ({ navigation, data }) => {
 
-    const goToDetails = (item) => navigation.navigate('TelegramDetails', {...item, cutAvatarText});
+    const goToDetails = (item) => navigation.navigate('TelegramDetails', {...item});
 
     const renderItem = ({item}) => (
         <TouchableOpacity onPress={() => goToDetails(item)}>

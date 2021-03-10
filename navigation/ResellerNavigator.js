@@ -4,6 +4,8 @@ import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
+import { HeaderMenu } from '../components/HeaderMenu';
+
 import { AdcoreScreen, VktargetScreen, StreamScreen, SpanelScreen, SmmokScreen, ResellerScreen } from '../screens';
 import { Colors, h, w } from '../utils/consts';
 
@@ -24,11 +26,12 @@ const _Resellers = () => (
         <Stack.Screen
             name='Resellers'
             component={ResellerScreen}
-            options={{ 
+            options={({ route }) => ({
                 title: 'Реселлеры',
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title
-            }}
+                headerTitleStyle: styles.title,
+                headerRight: () =>  <HeaderMenu {...route} />                  
+            })}
         />
     </Stack.Navigator>
 );

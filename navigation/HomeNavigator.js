@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, { Path, Rect, Circle, G } from 'react-native-svg';
+import Svg, { Path, Rect, G } from 'react-native-svg';
 import styled from 'styled-components/native';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
@@ -11,8 +11,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ResellerNavigator from './ResellerNavigator';
 
 import { HomeScreen, MailScreen, OrdersScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
+import { HeaderMenu } from '../components/HeaderMenu';
+
 import { Flex, AppTextBold, Button } from '../components/styled';
 import { Colors } from '../utils/consts';
+import { nameSurnameAbbreviation } from '../utils/functions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -32,7 +35,7 @@ const Avatar = styled.View`
 
 const HeaderTitle = (route) => {
 
-    const { cutAvatarText, nickname } = route.params;
+    const { nickname } = route.params;
     const navigation = useNavigation();
     const goBack = () => navigation.goBack();
 
@@ -59,7 +62,7 @@ const HeaderTitle = (route) => {
                 <AppTextBold
                     size='12px'
                 >
-                    {cutAvatarText}
+                    {nameSurnameAbbreviation(nickname)}
                 </AppTextBold>
             </Avatar>
             <AppTextBold
@@ -91,21 +94,12 @@ const _HomeStack = () => (
         <Stack.Screen
             name='Home' 
             component={HomeScreen} 
-            options={{ 
-                title: 'Главная',
-                headerTitleAlign: 'left',
-                headerTitleStyle: styles.title,
-                headerLeft: () => 
-                    <TouchableOpacity style={{ backgroundColor: 'red' }}  onPress={() => {}}>
-                        <Svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <Circle cx="2" cy="2" r="2" fill="#777676"/>
-                            <Circle cx="2" cy="10" r="2" fill="#777676"/>
-                            <Circle cx="2" cy="18" r="2" fill="#777676"/>
-                        </Svg>
-
-                    </TouchableOpacity>
-                
-            }}
+            options={({ route }) => ({
+                    title: 'Главная',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: styles.title,
+                    headerRight: () =>  <HeaderMenu {...route} />                  
+            })}
         />
     </Stack.Navigator>
 ); 
@@ -115,11 +109,12 @@ const _MailStack = () => (
         <Stack.Screen
             name='Mail'
             component={MailScreen}
-            options={{
+            options={({ route }) => ({
                 title: 'Почта',
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title 
-            }}
+                headerTitleStyle: styles.title,
+                headerRight: () =>  <HeaderMenu {...route} />                  
+            })}
         />
     </Stack.Navigator>
 ); 
@@ -129,11 +124,12 @@ const _OrdersStack = () => (
         <Stack.Screen
             name='Orders'
             component={OrdersScreen}
-            options={{
+            options={({ route }) => ({
                 title: 'Список заказов',
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title 
-            }}
+                headerTitleStyle: styles.title,
+                headerRight: () =>  <HeaderMenu {...route} />                  
+            })}
         />
     </Stack.Navigator>
 ); 
@@ -160,11 +156,12 @@ const _TelegramStack = () => (
         <Stack.Screen
             name='TelegramDialogs'
             component={TelegramScreen}
-            options={{
+            options={({ route }) => ({
                 title: 'Telegram - Чат',
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title
-            }}
+                headerTitleStyle: styles.title,
+                headerRight: () =>  <HeaderMenu {...route} />                  
+            })}
         />
         <Stack.Screen
             name='TelegramDetails'
