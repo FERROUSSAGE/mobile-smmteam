@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { ImageBackground, Platform } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
 
 import { Container, Flex, AppTextMedium, Button } from '../components/styled';
 
@@ -37,7 +37,10 @@ const Login = ({ navigation }) => {
     const goToHomeHandler = () => navigation.navigate('HomeContainer');
 
     return (
-        <Flex flex={1}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+        >
             <ImageBackground
                 resizeMode='cover'
                 style={{ flex: 1, justifyContent: 'center' }}
@@ -75,11 +78,11 @@ const Login = ({ navigation }) => {
                             >
                                 {
                                     Platform.OS === 'ios'
-                                    ?  <Input
+                                        ? <Input
                                             ios
                                             secureTextEntry={passwordVisible}
                                         />
-                                    :
+                                        :
                                         <Input
                                             secureTextEntry={passwordVisible}
                                         />
@@ -118,7 +121,7 @@ const Login = ({ navigation }) => {
                     </Flex>
                 </Flex>
             </ImageBackground>
-        </Flex>
+        </KeyboardAvoidingView>
     );
 };
 

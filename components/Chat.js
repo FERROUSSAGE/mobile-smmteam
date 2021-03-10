@@ -1,10 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { TouchableOpacity, FlatList} from 'react-native';
 
 import { Container, Flex, AppTextBold } from './styled';
 
 import { cutString, getHash } from '../utils/functions';
+
+let cutAvatarText = '';
 
 const Avatar = styled.View`
     width: 55px;
@@ -27,41 +29,46 @@ const avatarText = (string) =>{
     return result;
 } 
 
-const Item = ({ nickname, text }) => (
-    <Flex
-        direction='row'
-        style={{ marginTop: 20 }}
-    >
-        <Avatar color={getHash()}>
-            <AppTextBold
-                size='15px'
-                style={{ textAlign: 'center', lineHeight: 53 }}
-            >
-                {avatarText(nickname)}
-            </AppTextBold>
-        </Avatar>
-        <ItemContent
-            justifyContent='space-around'
+const Item = ({ nickname, text }) => {
+
+    cutAvatarText = avatarText(nickname);
+
+    return (
+        <Flex
+            direction='row'
+            style={{ marginTop: 20 }}
         >
-            <AppTextBold
-                size='12px'
-                color='black'
+            <Avatar color={getHash()}>
+                <AppTextBold
+                    size='15px'
+                    style={{ textAlign: 'center', lineHeight: 53 }}
+                >
+                    {cutAvatarText}
+                </AppTextBold>
+            </Avatar>
+            <ItemContent
+                justifyContent='space-around'
             >
-                {nickname}
-            </AppTextBold>
-            <AppTextBold
-                size='12px'
-                color='rgba(0, 0, 0, 0.5)'
-            >
-                {cutString(text, 35)}
-            </AppTextBold>
-        </ItemContent>
-    </Flex>
-);
+                <AppTextBold
+                    size='12px'
+                    color='black'
+                >
+                    {nickname}
+                </AppTextBold>
+                <AppTextBold
+                    size='12px'
+                    color='rgba(0, 0, 0, 0.5)'
+                >
+                    {cutString(text, 35)}
+                </AppTextBold>
+            </ItemContent>
+        </Flex>
+    );
+}
 
 const Chat = ({ navigation, data }) => {
 
-    const goToDetails = (item) => navigation.navigate('TelegramDetails', {item});
+    const goToDetails = (item) => navigation.navigate('TelegramDetails', {...item, cutAvatarText});
 
     const renderItem = ({item}) => (
         <TouchableOpacity onPress={() => goToDetails(item)}>
@@ -80,10 +87,6 @@ const Chat = ({ navigation, data }) => {
             />
         </Container>
     );
-}
-
-const ChatDetails = () => {
-
 }
 
 export default Chat;

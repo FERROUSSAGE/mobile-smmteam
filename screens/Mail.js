@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import styled from 'styled-components';
 
 import { Container, Flex, Input, Button, AppTextBold } from '../components/styled';
@@ -32,11 +32,12 @@ const Mail = () => {
     
 
     return (
-        <Container
-            style={{ flex: 1 }}
+        <KeyboardAvoidingView
+            style={{ flex: 1, paddingHorizontal: 20 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-            <Flex 
-                flex={1} 
+            <Flex
+                flex={1}
                 justifyContent='space-around'
             >
                 <TextInput
@@ -75,7 +76,7 @@ const Mail = () => {
                     onChangeText={setHtmlHandler}
                     value={html}
                 />
-                <Flex 
+                <Flex
                     direction='row'
                     justifyContent={w <= 320 ? 'center' : 'space-between'}
                     alignItems='center'
@@ -97,7 +98,7 @@ const Mail = () => {
                     <Button
                         color={pattern === 1 ? 'blue' : ''}
                         borderColor={pattern === 0 ? 'rgba(94, 80, 255, 0.5)' : pattern === 1 ? '' : 'rgba(94, 80, 255, 0.5)'}
-                        style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 15, paddingRight: 10}}
+                        style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 15, paddingRight: 10 }}
                         onPress={() => setPatternHandler(1)}
                     >
                         <AppTextBold
@@ -112,14 +113,14 @@ const Mail = () => {
                     width='165px'
                     color='pink'
 
-                    style={{ 
+                    style={{
                         alignItems: 'center',
-                        marginBottom: 13, 
+                        marginBottom: 13,
                         marginLeft: 'auto',
                         marginRight: 'auto',
-                        paddingTop: 16, 
-                        paddingBottom: 16, 
-                        paddingLeft: 40, 
+                        paddingTop: 16,
+                        paddingBottom: 16,
+                        paddingLeft: 40,
                         paddingRight: 40
                     }}
                     onPress={() => Alert.alert(toMail + ' ' + caption + '' + html)}
@@ -131,8 +132,7 @@ const Mail = () => {
                     </AppTextBold>
                 </Button>
             </Flex>
-
-        </Container>
+        </KeyboardAvoidingView>
     );
 };
 

@@ -1,7 +1,9 @@
 import React from 'react';
-import Svg, { Path, Rect, Circle } from 'react-native-svg';
+import Svg, { Path, Rect, Circle, G } from 'react-native-svg';
+import styled from 'styled-components/native';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
+import { useNavigation } from '@react-navigation/native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,10 +11,66 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ResellerNavigator from './ResellerNavigator';
 
 import { HomeScreen, MailScreen, OrdersScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
+import { Flex, AppTextBold, Button } from '../components/styled';
 import { Colors } from '../utils/consts';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+const Avatar = styled.View`
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+
+    margin-left: 20px;
+    margin-right: 10px;
+
+    justify-content: center;
+    align-items: center;
+    backgroundColor: ${props => props.color || '#D29CFE'};
+`;
+
+const HeaderTitle = (route) => {
+
+    const { cutAvatarText, nickname } = route.params;
+    const navigation = useNavigation();
+    const goBack = () => navigation.goBack();
+
+    return (
+        <Flex
+            flex={1}
+            direction='row'
+            alignItems='center'
+        >
+            <Button
+                onPress={goBack}
+            >
+                <Svg width="20" height="20" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <G>
+                        <G>
+                            <Path id="Path 2" d="M24.5 14L3.5 14" stroke="#413E3E" stroke-linecap="round" />
+                            <Path id="Path 3" d="M10.5 7L3.5 14L10.5 21" stroke="#413E3E" stroke-linecap="round" />
+                        </G>
+                    </G>
+                </Svg>
+            </Button>
+
+            <Avatar>
+                <AppTextBold
+                    size='12px'
+                >
+                    {cutAvatarText}
+                </AppTextBold>
+            </Avatar>
+            <AppTextBold
+                size='12px'
+                color='black'
+            >
+                {nickname}
+            </AppTextBold>
+        </Flex>
+    );
+}
 
 const styles = StyleSheet.create({
     title: {
@@ -37,7 +95,7 @@ const _HomeStack = () => (
                 title: 'Главная',
                 headerTitleAlign: 'left',
                 headerTitleStyle: styles.title,
-                headerLeft: () => {
+                headerLeft: () => 
                     <TouchableOpacity style={{ backgroundColor: 'red' }}  onPress={() => {}}>
                         <Svg width="4" height="20" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <Circle cx="2" cy="2" r="2" fill="#777676"/>
@@ -46,7 +104,7 @@ const _HomeStack = () => (
                         </Svg>
 
                     </TouchableOpacity>
-                }
+                
             }}
         />
     </Stack.Navigator>
@@ -111,11 +169,11 @@ const _TelegramStack = () => (
         <Stack.Screen
             name='TelegramDetails'
             component={TelegramDetailsScreen}
-            options={{
-                title: 'Telegram - Чат',
+            options={({ route }) => ({
+                headerLeft: null,
                 headerTitleAlign: 'left',
-                headerTitleStyle: styles.title 
-            }}
+                headerTitle: () => <HeaderTitle {...route} />
+            })} 
         />
     </Stack.Navigator>
 ); 
