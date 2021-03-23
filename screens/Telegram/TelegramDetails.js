@@ -16,9 +16,8 @@ const Message = styled.View`
     background: ${props => props.color ? 'rgba(72, 248, 205, 0.87)' : 'rgba(94, 80, 255, 0.87)'};
     border-radius: 10px;
 
-    width: ${w * 0.7}px;
+    width: ${props => props.width < 10 ? props.width * 10 : props.width * 6}px;
     padding: 15px 10px;
-    margin: ${props => props.position ? `5px 0 5px ${w * 0.2}px` : `5px ${w * 0.2}px 5px 0`};
 `;
 
 const substrMessage = (message) => message.split(': ')[1];
@@ -41,20 +40,26 @@ const TelegramDetails = ({ route }) => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+            keyboardVerticalOffset={80}
             style={{ flex: 1 }}
         >
             <Container
                 style={{ flex: 1 }}
             >
                 <FlatList
+                    contentContainerStyle={{ flex: 1, justifyContent: 'flex-end' }}
                     data={messages}
                     renderItem={({item}) => {
                         const isOperator = isOperatorMessage(item);
                         return (
                             <Message
-                                position={isOperator}
+                                style={{
+                                    marginVertical: 5,
+                                    marginLeft: isOperator ? w * 0.2 : 0,
+                                    marginRight: !isOperator ? w * 0.2 : 0
+                                }}
                                 color={isOperator}
+                                width={substrMessage(item).length}
                             >
                                 <AppTextBold
                                     color='white'
