@@ -188,7 +188,7 @@ const HomeNavigator = () => (
                 ...ifIphoneX({
                     paddingBottom: 17
                 }, {
-                    paddingBottom: 10
+                    paddingBottom: 25
                 }),
             },
             labelStyle: styles.bottomLabel,

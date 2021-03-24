@@ -42,7 +42,7 @@ const Wrapper = styled(ScrollView)`
 const DevelopersText = styled(AppTextBold)`
     position: absolute;
     bottom: 10px;
-    left: ${Math.floor(w / 7)}px;
+    left: ${Math.floor(w / 6)}px;
     width: 250px;
     text-align: center;
 `;

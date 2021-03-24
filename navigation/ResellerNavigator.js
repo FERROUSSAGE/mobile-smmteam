@@ -105,11 +105,8 @@ const ResellerNavigator = () => (
     <Drawer.Navigator
         drawerPosition='right'
         initialRouteName='Resellers'
-        hideStatusBar={true}
-        statusBarAnimation='slide'
         keyboardDismissMode='none'
         drawerStyle={{
-            borderTopLeftRadius: 44,
             borderBottomLeftRadius: 44
         }}
         drawerContentOptions={{

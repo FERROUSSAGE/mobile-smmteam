@@ -1,14 +1,16 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { Container, Flex, InputReseller, Button, AppTextMedium, ComboBox } from '../../components/styled';
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import { Flex, InputReseller, Button, AppTextMedium, ComboBox } from '../../components/styled';
 import { w } from '../../utils/consts';
 
 const Adcore = () => {
     return (
-        <Flex flex={1} justifyContent='space-around' style={{ paddingHorizontal: 40, paddingVertical: 40 }}>
-                <InputReseller
-                    placeholder='Название компании'
-                />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={110}
+            style={{ flex: 1 }}
+        >
+            <Flex flex={1} justifyContent='center' alignItems='stretch' style={{ paddingHorizontal: 40, paddingVertical: 40 }}>
                 <ComboBox
                     items={[
                         {label: 'YouTube', value: 'YT'}
@@ -20,6 +22,9 @@ const Adcore = () => {
                         { label: 'Лайки', value: 'likes'},
                     ]}
                     placeholder='Выберите тип'
+                />
+                <InputReseller
+                    placeholder='Название компании'
                 />
                 <InputReseller
                     placeholder='Ссылка'
@@ -49,8 +54,11 @@ const Adcore = () => {
                     >
                         Заказать
                     </AppTextMedium>
-                </Button>
-        </Flex>
+                </Button>                
+            </Flex>   
+            
+        </KeyboardAvoidingView>
+
     );
 };
 

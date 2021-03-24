@@ -16,7 +16,15 @@ const Message = styled.View`
     background: ${props => props.color ? 'rgba(72, 248, 205, 0.87)' : 'rgba(94, 80, 255, 0.87)'};
     border-radius: 10px;
 
-    width: ${props => props.width < 10 ? props.width * 10 : props.width * 6}px;
+    width: ${props => 
+        props.width <= 2 
+        ? props.width * 20
+        : props.width <= 5
+        ? props.width * 15
+        : props.width <= 10
+        ? props.width * 10
+        : props.width * 5.4
+    }px;
     padding: 15px 10px;
 `;
 
