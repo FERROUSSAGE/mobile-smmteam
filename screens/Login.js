@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
+import { Alert, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
 
 import { Container, Flex, AppTextMedium, Button } from '../components/styled';
 
 import eyeSlash from '../assets/icons/eye-slash.png';
 import eye from '../assets/icons/eye.png';
+import { useInput } from '../hooks';
+import { login as httpLogin} from '../https/anyApi';
+import axios from 'axios';
 
 const Input = styled.TextInput`
     background: rgba(255, 255, 255, 0.48);
@@ -32,9 +35,20 @@ const Eye = styled.Image`
 
 const Login = ({ navigation }) => {
     const [passwordVisible, setPasswordVisible] = React.useState(true);
+    const login = useInput('');
+    const password = useInput('');
 
     const visibleHandler = () => setPasswordVisible(!passwordVisible); 
     const goToHomeHandler = () => navigation.navigate('HomeContainer');
+
+    const logInHandler = async () => {
+        try{
+            let { data: user } = await httpLogin(login.value, password.value);
+            if(user.status) goToHomeHandler();
+        } catch(e){
+            Alert.alert('Логин либо пароль неверны!');
+        }
+    }
 
     return (
         <KeyboardAvoidingView
@@ -62,8 +76,8 @@ const Login = ({ navigation }) => {
                         </AppTextMedium>
                             {
                                 Platform.OS === 'ios'
-                                    ? <Input ios />
-                                    : <Input />
+                                    ? <Input ios {...login} textContentType='username' autoCompleteType='username'/>
+                                    : <Input {...login} textContentType='username' autoCompleteType='username'/>
                             }
                             <AppTextMedium
                                 size='18px'
@@ -81,10 +95,16 @@ const Login = ({ navigation }) => {
                                         ? <Input
                                             ios
                                             secureTextEntry={passwordVisible}
+                                            textContentType='password'
+                                            autoCompleteType='password'
+                                            {...password}
                                         />
                                         :
                                         <Input
                                             secureTextEntry={passwordVisible}
+                                            textContentType='password'
+                                            autoCompleteType='password'
+                                            {...password}
                                         />
                                 }
                                 <Button
@@ -106,7 +126,7 @@ const Login = ({ navigation }) => {
                                     width='165px'
                                     height='50px'
                                     shadow
-                                    onPress={goToHomeHandler}
+                                    onPress={logInHandler}
 
                                     style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 16, paddingRight: 16 }}
                                 >

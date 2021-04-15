@@ -10,10 +10,12 @@ const Colors = {
     blue: '#5E50FF',
     pink: '#B250FF'
 };
+const RN_APP_API_URL = 'http://5.180.136.16:8080/';
 
 
 export {
     height as h, 
     width as w,
-    Colors
+    Colors,
+    RN_APP_API_URL
 };
