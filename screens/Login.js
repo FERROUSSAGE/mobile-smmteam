@@ -7,8 +7,10 @@ import { Container, Flex, AppTextMedium, Button } from '../components/styled';
 import eyeSlash from '../assets/icons/eye-slash.png';
 import eye from '../assets/icons/eye.png';
 import { useInput } from '../hooks';
-import { login as httpLogin} from '../https/anyApi';
-import axios from 'axios';
+import { login as httpLogin} from '../https/any';
+import { observer } from 'mobx-react-lite';
+
+import store from '../store';
 
 const Input = styled.TextInput`
     background: rgba(255, 255, 255, 0.48);
@@ -33,7 +35,7 @@ const Eye = styled.Image`
 `;
 
 
-const Login = ({ navigation }) => {
+const Login = observer(({ navigation }) => {
     const [passwordVisible, setPasswordVisible] = React.useState(true);
     const login = useInput('');
     const password = useInput('');
@@ -44,7 +46,11 @@ const Login = ({ navigation }) => {
     const logInHandler = async () => {
         try{
             let { data: user } = await httpLogin(login.value, password.value);
-            if(user.status) goToHomeHandler();
+            if(user.status) {
+                store.user = user.response
+                goToHomeHandler();
+            }
+            goToHomeHandler();
         } catch(e){
             Alert.alert('Логин либо пароль неверны!');
         }
@@ -143,6 +149,6 @@ const Login = ({ navigation }) => {
             </ImageBackground>
         </KeyboardAvoidingView>
     );
-};
+});
 
 export {Login};

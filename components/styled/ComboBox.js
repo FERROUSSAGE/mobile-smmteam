@@ -2,16 +2,21 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import React from 'react';
 import { Platform } from 'react-native';
 
-const ComboBox = ({items, placeholder}) => {
+import { Colors } from '../../utils/consts';
+
+const ComboBox = ({items, placeholder, index, onChangeItem, value}) => {
     
     return (
         <DropDownPicker
             items={items}
+            zIndex={index}
+            onChangeItem={onChangeItem}
+            value={value}
             containerStyle={{
                 height: 40,
                 width: '97%',
                 marginLeft: '1.5%',
-                marginVertical: 17
+                marginVertical: 17,
             }}
             style={{
                 borderBottomWidth: 1,
@@ -34,7 +39,10 @@ const ComboBox = ({items, placeholder}) => {
             itemStyle={{
                 justifyContent: 'flex-start'
             }}
-            activeLabelStyle={{ color: 'red' }}
+            labelStyle={{
+                color: Platform.OS === 'ios' ? 'rgba(142, 140, 140, 0.6)' : 'rgba(142, 140, 140, 0.8)',
+            }}
+            activeLabelStyle={{ color: Colors.blue }}
             placeholder={placeholder}
             placeholderStyle={{
                 color: Platform.OS === 'ios' ? 'rgba(142, 140, 140, 0.6)' : 'rgba(142, 140, 140, 0.8)',

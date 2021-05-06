@@ -5,9 +5,12 @@ import Accardeon from 'react-native-collapsible/Accordion';
 import styled from 'styled-components';
 
 import { AppTextMedium, AppTextRegular } from '../components/styled';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 
 import { w, Colors } from '../utils/consts';
+import { observer } from 'mobx-react-lite';
+
+import store from '../store';
 
 const HeaderWrapper = styled.View`
     background: rgba(127, 5, 255, 0.26);
@@ -79,9 +82,15 @@ const Header = (section) => {
   ];
 
 
-const Home = () => {
+const Home = observer(() => {
     const [activeSection, setActiveSection] = React.useState([0]);
     const updateSectionHandler = (activeSections) => setActiveSection(activeSections);
+    
+    React.useEffect(() => {
+        store.fetchResellerTypes();
+        store.fetchResellers();
+        store.fetchOrders();
+    },  []);
 
     return (
         <Flex flex={1}>
@@ -115,6 +124,6 @@ const Home = () => {
             </DevelopersText>
         </Flex>
     );
-};
+});
 
 export {Home};

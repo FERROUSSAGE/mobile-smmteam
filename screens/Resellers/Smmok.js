@@ -2,8 +2,26 @@ import React from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { Flex, InputReseller, Button, AppTextMedium, ComboBox } from '../../components/styled';
 import { w } from '../../utils/consts';
+import { getItems } from '../../utils/functions';
 
-const Smmok = () => {
+import { observer } from 'mobx-react-lite';
+
+import store from '../../store';
+import { useInput, useComboBox } from '../../hooks';
+
+const Smmok = observer(() => {
+
+    const resellerType = useComboBox(null),
+    idSmmcraft = useInput(''),
+    link = useInput(''),
+    countOrdered = useInput(''),
+    payment = useComboBox(null),
+    cost = useInput('');
+
+    const types = store.resellerTypes.filter(item => item.resellerId === 2);
+
+    const itemsService = getItems(types, ['description', 'type']);
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -12,29 +30,30 @@ const Smmok = () => {
         >
             <Flex flex={1} justifyContent='center' alignItems='stretch' style={{ paddingHorizontal: 40, paddingVertical: 40 }}>
                 <ComboBox
-                    items={[
-                        { label: 'Лайки', value: 'likes'},
-                    ]}
+                    items={itemsService}
                     placeholder='Выберите тип'
+                    {...resellerType}
                 />
                 <InputReseller
                     placeholder='Название компании'
+                    {...idSmmcraft}
                 />
                 <InputReseller
                     placeholder='Ссылка'
+                    {...link}
                 />
                 <InputReseller
                     placeholder='Количество'
+                    {...countOrdered}
                 />
                 <ComboBox
-                    items={[
-                        { label: 'RK', value: 'RK'},
-                        { label: 'UP', value: 'UP'}
-                    ]}
+                    items={store.payments}
                     placeholder='Платежная система'
+                    {...payment}
                 />
                 <InputReseller
                     placeholder='Стоимость заказа'
+                    {...cost}
                 />
                 <Button 
                     color='blue'
@@ -54,6 +73,6 @@ const Smmok = () => {
         </KeyboardAvoidingView>
 
     );
-};
+});
 
 export {Smmok};
