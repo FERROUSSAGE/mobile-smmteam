@@ -2,9 +2,9 @@ import React from 'react';
 import { KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { Flex, InputReseller, Button, AppTextMedium, ComboBox } from '../../components/styled';
 import { w } from '../../utils/consts';
-import { create as httpCreate } from '../../https/api';
+import { createAdcore as httpCreate } from '../../https/api';
 import { createOrder as httpCreateOrder } from '../../https/order';
-import { getItems } from '../../utils/functions';
+import { getItems, checkOrder, clearFields } from '../../utils/functions';
 
 import { observer } from 'mobx-react-lite';
 
@@ -27,12 +27,16 @@ const Adcore = observer(() => {
     const itemsTypes = getItems(types, ['description', 'type', 'name']).filter(item => item.name === socialNetwork.value);
 
 
-    const createOrder = async () => {
+    const createOrderHandler = async () => {
         try {
             if(!socialNetwork.value || !resellerType.value || !idSmmcraft.value || !link.value || !countOrdered.value || !payment.value || !cost.value)
                 return Alert.alert('Заполните все поля ввода!');
             
             const type = types.find(item => item.type === resellerType.value);
+
+            const check = await checkOrder(idSmmcraft.value);
+            if(check)
+                return Alert.alert(check);
 
             const { data: adcore } = await httpCreate(resellerType.value, link.value, countOrdered.value, type.price);
             const target = adcore.response;
@@ -48,18 +52,20 @@ const Adcore = observer(() => {
                     socialNetwork: socialNetwork.value,
                     link: link.value,
                     cost: +cost.value,
-                    spend: Math.floor(type.price * cost.value),
+                    spend: Math.floor(type.price * countOrdered.value),
                     countOrdered: +countOrdered.value,
                     payment: payment.value,
-                    resellerId: 1,
+                    resellerId: type.resellerId,
                     resellerTypeId: type.id,
                     userId: store.user.id
                 });
 
-                if(order.status)
+                if(order.status){
+                    clearFields([idSmmcraft, link, countOrdered, cost]);
                     return Alert.alert('Заказ успешно создан!')
+                }
 
-            } catch (e) { Alert.alert('Заказ с таким -ID- уже существует!') }
+            } catch (e) { Alert.alert('Произошла ошибка!') }
         } catch (e) { Alert.alert('Произошла ошибка!') }
         
     }
@@ -114,7 +120,7 @@ const Adcore = observer(() => {
                     height='50px'
                     width='165px'
                     style={{ paddingVertical: 15, marginLeft: w / 6}}
-                    onPress={() => createOrder()}
+                    onPress={() => createOrderHandler()}
                 >
                     <AppTextMedium
                         style={{ textAlign: 'center' }}

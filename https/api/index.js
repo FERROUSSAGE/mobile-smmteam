@@ -1,1 +1,1 @@
-export { balance, info, create } from './adcore';
+export { balance as balanceAdcore, info as infoAdcore, create as createAdcore } from './adcore';

@@ -5,5 +5,5 @@ export const useInput = (init) => {
 
     const onChangeText = text => setValue(text);
 
-    return { value, onChangeText };
+    return { value, onChangeText, setValue };
 }
