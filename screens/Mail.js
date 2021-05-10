@@ -3,6 +3,7 @@ import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import styled from 'styled-components';
 
 import { Container, Flex, Input, Button, AppTextBold } from '../components/styled';
+import { sendMail } from '../https/google/mail';
 import { w } from '../utils/consts';
 
 const TextInput = styled(Input)`
@@ -12,8 +13,8 @@ const TextInput = styled(Input)`
 `;
 
 const patterns = {
-    incorrect: 'Здравствуйте, Ваш заказ <strong>#Номер заказа</strong> не может быть исполнен, поскольку в нём указана не корректная ссылка для продвижения. Чтобы Ваш заказ был исполнен отпишитесь, пожалуйста в чат поддержки на нашем сайте!)<br><br>С уважением,<br>команда <strong>SmmCraft.Ru</strong><br> <strong>E - mail: </strong> <a href="mailto:team@smmcraft.ru">team@smmcraft.ru</a><br> <strong>Сайт: </strong><a href="https://smmcraft.ru/">smmcraft.ru</a><br><img style="width: 50%;" src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Favatars.mds.yandex.net%2Fget-mail-signature%2F222735%2F0c07c1894a68cc0536884bf2ec66a173%2Forig&proxy=yes&key=b4847178f9c9fd6512b77d639348a577">',
-    endDay: 'Здравствуйте, Ваш заказ <strong>#Номер заказа</strong> был оформлен после окончания рабочей смены оператора. Чтобы запустить Ваш заказ отпишитесь, пожалуйста оператору в чат поддержки на нашем сайте!)<br><br>\n\n\n С уважением,<br>команда <strong>SmmCraft.Ru</strong><br> <strong>E - mail: </strong> <a href=\"mailto:team@smmcraft.ru\">team@smmcraft.ru</a><br> <strong>Сайт: </strong><a href=\"https://smmcraft.ru/\">smmcraft.ru</a><br><img  style=\"width: 50%;\" src=\"https://resize.yandex.net/mailservice?url=https%3A%2F%2Favatars.mds.yandex.net%2Fget-mail-signature%2F222735%2F0c07c1894a68cc0536884bf2ec66a173%2Forig&proxy=yes&key=b4847178f9c9fd6512b77d639348a577\">'
+    incorrect: 'Здравствуйте, Ваш заказ <strong>#Номер заказа</strong> не может быть исполнен, поскольку в нём указана не корректная ссылка для продвижения. Чтобы Ваш заказ был исполнен отпишитесь, пожалуйста в чат поддержки на нашем сайте!)<br><br>\n\n\n С уважением,<br>команда <strong>SmmCraft.Ru</strong><br> <strong>E - mail: </strong> <a href="mailto:team@smmcraft.ru">team@smmcraft.ru</a><br> <strong>Сайт: </strong><a href="https://smmcraft.ru/">smmcraft.ru</a><br>',
+    endDay: 'Здравствуйте, Ваш заказ <strong>#Номер заказа</strong> был оформлен после окончания рабочей смены оператора. Чтобы запустить Ваш заказ отпишитесь, пожалуйста оператору в чат поддержки на нашем сайте!)<br><br>\n\n\n С уважением,<br>команда <strong>SmmCraft.Ru</strong><br> <strong>E - mail: </strong> <a href=\"mailto:team@smmcraft.ru\">team@smmcraft.ru</a><br> <strong>Сайт: </strong><a href=\"https://smmcraft.ru/\">smmcraft.ru</a><br>'
 }
 
 const Mail = () => {
@@ -30,6 +31,14 @@ const Mail = () => {
      : (setHtml(patterns.endDay), setPattern(index)); 
     const setHtmlHandler = (text) => setHtml(text); 
     
+    const sendMailHandler = async () => {
+        try {
+            const { data: mail } = await sendMail(toMail, caption, html);
+            const target = mail.response;
+            if(mail.status)
+                Alert.alert(target.msg + '\n' + toMail);
+        } catch (e) { Alert.alert('Произошла ошибка при отправки письма!\n' + e) }
+    }
 
     return (
         <KeyboardAvoidingView
@@ -123,7 +132,7 @@ const Mail = () => {
                         paddingLeft: 40,
                         paddingRight: 40
                     }}
-                    onPress={() => Alert.alert(toMail + ' ' + caption + '' + html)}
+                    onPress={sendMailHandler}
                 >
                     <AppTextBold
                         size='13px'

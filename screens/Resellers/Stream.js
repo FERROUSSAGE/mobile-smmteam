@@ -6,10 +6,13 @@ import { createAdcore as httpCreateAdcore } from '../../https/api';
 import { createOrder as httpCreateOrder } from '../../https/order';
 import { startStream as httpStartSream } from '../../https/streambooster';
 import { checkOrder, clearFields } from '../../utils/functions';
+
+import { observer } from 'mobx-react-lite';
+
 import store from '../../store';
 import { w } from '../../utils/consts';
 
-const Stream = () => {
+const Stream = observer(() => {
 
     const service = useComboBox(null),
         idSmmcraft = useInput(''),
@@ -18,7 +21,8 @@ const Stream = () => {
         threads = useInput(''),
         countOrdered = useInput(''),
         payment = useComboBox(null),
-        cost = useInput(''); 
+        cost = useInput(''),
+        countViews = useInput('');
 
     const link = `https://youtu.be/${uuid.value}`;
     const resellerType = store.resellerTypes.find(item => item.name === 'YouTube' && item.resellerId === 1 && item.type === "4");
@@ -41,15 +45,16 @@ const Stream = () => {
         try {
             const { data: order } = await httpCreateOrder({
                 idSmmcraft: +idSmmcraft.value,
-                socialNetwork: service.value === 0 ? 'YouTube' : 'Twitch',
+                socialNetwork: service.value === 1 ? 'YouTube' : 'Twitch',
                 link,
                 cost: +cost.value,
                 spend: enabledLikes ? Math.floor(resellerType.price * countOrdered.value) : 0,
                 countOrdered: +countOrdered.value,
                 payment: payment.value,
-                resellerId: resellerType.resellerId,
-                resellerTypeId: resellerType.id,
-                userId: store.user.id
+                resellerId: enabledLikes ? resellerType.resellerId : null,
+                resellerTypeId: enabledLikes ?resellerType.id : null,
+                userId: store.user.id,
+                countViews: countViews.value
             });
 
             if(order.status)
@@ -100,6 +105,11 @@ const Stream = () => {
                     {...threads}
                    />
                 <InputReseller
+                    placeholder='*Количество зрителей в заказе'
+                    keyboardType='numeric'
+                    {...countViews}
+                   />
+                <InputReseller
                     placeholder='*Таймер: продолжительность стрима'
                     {...timer}
                    />
@@ -135,6 +145,6 @@ const Stream = () => {
             </Flex>   
         </ScrollView>
     );
-};
+});
 
 export {Stream};

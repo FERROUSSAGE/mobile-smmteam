@@ -1,8 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { ScrollView, Text, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { AppTextMedium, Button, Container, Flex, Input } from '../components/styled';
+import Swipeout from 'react-native-swipeout';
 
+import { observer } from 'mobx-react-lite';
+import { debounce } from 'lodash';
+
+import store from '../store';
+import { getOrderByText as httpGetOrderByText, deleteOrder as httpDeleteOrder } from '../https/order';
 
 const Row = styled.View`
     flexDirection: row;
@@ -19,7 +25,16 @@ const Cell = styled.View`
     margin: 10px;
     alignItems: center;
     justifyContent: center;
+
+    height: 35px;
+    
 `;
+
+const swipeoutButton = styled.View`
+    width: 80px;
+    height: 80px;
+    background-color: #B4C1CB;
+`
 
 const RowItem = ({ column, color }) => {  
     return (
@@ -28,7 +43,6 @@ const RowItem = ({ column, color }) => {
                 {column.map((data) => (
                     <CellItem
                         data={data}
-                        key={data.toString(16)}
                     />
                 ))}
             </Row>
@@ -45,13 +59,44 @@ const CellItem = ({ data }) => {
     );
 }
 
-const Orders = () => {
-    const data = [
-        [15, 14, 13, 12],
-        [11, 10, 9, 8],
-        [7, 6, 5, 4],
-        [0, 1, 2, 3],
-      ];
+const dataFromOrders = (array) => [] = array.map(item => [item.idSmmcraft, item.socialNetwork, item.countOrdered, item.spend]);
+
+const Orders = observer(() => {
+    const [page, setPage] = React.useState(1);
+
+    let data = dataFromOrders(store.orders.rows);
+
+    const lastPage = Math.ceil(store.totalCount / 10);
+
+    const prevArrow = () => page >= 2 && setPage(page - 1);
+    const nextArrow = () => page <= lastPage && setPage(page + 1);
+    const startArrow = () => setPage(1);
+    const lastArrow = () => setPage(lastPage);
+
+    React.useEffect(() => {
+        store.fetchOrders(page);
+    }, [page])
+
+
+    const handler = React.useCallback(debounce( async (text) => {
+        try {
+            const orders = await httpGetOrderByText(text);
+            store.orders = orders.data.response;
+        } catch (e) {
+            Alert.alert('Ошибка');
+        }
+    }), 150);
+
+    const deleteOrderHandler = async (id) => {
+        try {
+            const { data: orderDeleted } = await httpDeleteOrder(store.orders.rows.find(item => item.idSmmcraft === id).id);
+            if(!orderDeleted.status)
+                return Alert.alert(orderDeleted.message);
+            Alert.alert(orderDeleted.message);
+            store.fetchOrders(page);
+
+        } catch (e) { Alert.alert('Произошла ошибка при удалении!\n' + e); }
+    }
 
     return (
         <Flex flex={1}>
@@ -68,6 +113,8 @@ const Orders = () => {
                         border
                         size='11px'
                         style={{ flex: 1, paddingTop: 0, paddingBottom: 0, height: 30}}
+                        onChangeText={handler}
+                        keyboardType='numeric'
                     />
                     <Button 
                         color='blue'
@@ -84,32 +131,53 @@ const Orders = () => {
                     </Button>
                 </Flex>
 
-                    <ScrollView>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        contentInset={{top: -50, left: 0, bottom: 20, right: 0}}
+                    >
                         <RowItem 
                             column={['Номер заказа', 'Соц. сеть', 'Кол-во', 'Расход']}
                         />
-                        {data.map((column, i) => (
-                            <RowItem 
-                                column={column} 
-                                color={i % 2 === 0}
-                                key={column.toString(16)} 
-                            />
+                        {data && data.map((column, i) => (
+                            <Swipeout
+                                key={i.toString(16)}
+                                autoClose={true}
+                                backgroundColor='transparent'
+                                buttonWidth={80}
+                                right={[
+                                    {
+                                        component: () => <swipeoutButton/>,
+                                    },
+                                    {
+                                        component: () => <swipeoutButton/>,
+                                        onPress: () => deleteOrderHandler(column[0]) 
+                                    }
+                                
+                                ]}
+                            >
+                                <RowItem 
+                                    column={column}
+                                    color={i % 2 === 0}
+                                />
+                            </Swipeout>
+  
                         ))}
                     </ScrollView>
 
                 <Flex 
-                    style={{ position: 'absolute', bottom: 5, left: 0, right: 0, paddingHorizontal: 5 }}
+                    style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 5 }}
                 >
                     <Flex
                         direction='row'
                         justifyContent='space-between'
                         alignItems='center'
+                        style={{ backgroundColor: 'white', height: 40 }}
                     >
                         <AppTextMedium
                             size='12px'
                             color='rgba(133, 133, 133, 0.82)'
                         >
-                            Всего: 50
+                            Всего: {store.totalCount}
                         </AppTextMedium>
                         	
                         <Flex
@@ -121,9 +189,11 @@ const Orders = () => {
                                 color='rgba(133, 133, 133, 0.82)'
                                 style={{ marginRight: 10 }}
                             >
-                                Cтраница: 1
+                                Cтраница: {page}
                             </AppTextMedium>
-                            <Button style={{ marginRight: 5 }}>
+                            <Button style={{ marginRight: 5 }}
+                                onPress={startArrow}
+                            >
                                 <AppTextMedium 
                                     size='12px'
                                     color='rgba(133, 133, 133, 0.82)'
@@ -131,7 +201,9 @@ const Orders = () => {
                                     &#5176;&#5176;
                                 </AppTextMedium>
                             </Button>
-                            <Button style={{ marginRight: 5 }}>
+                            <Button style={{ marginRight: 5 }}
+                                onPress={prevArrow}
+                            >
                                 <AppTextMedium 
                                     size='12px'
                                     color='rgba(133, 133, 133, 0.82)'
@@ -140,7 +212,9 @@ const Orders = () => {
                                     &#5176;
                                 </AppTextMedium>
                             </Button>
-                            <Button style={{ marginLeft: 5 }}>
+                            <Button style={{ marginLeft: 5 }}
+                                onPress={nextArrow}
+                            >
                                 <AppTextMedium 
                                     size='12px'
                                     color='rgba(133, 133, 133, 0.82)'
@@ -148,7 +222,9 @@ const Orders = () => {
                                     &#5171;
                                 </AppTextMedium>
                             </Button>
-                            <Button style={{ marginLeft: 5 }}>
+                            <Button style={{ marginLeft: 5 }}
+                                onPress={lastArrow}
+                            >
                                 <AppTextMedium 
                                     size='12px'
                                     color='rgba(133, 133, 133, 0.82)'
@@ -163,5 +239,5 @@ const Orders = () => {
             </Container>
         </Flex>
     );
-};
+});
 export {Orders};

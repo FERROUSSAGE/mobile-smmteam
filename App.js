@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import { LogBox } from 'react-native';
 
 import AppNavigator from './navigation/AppNavigator';
 import { Flex } from './components/styled';
@@ -16,6 +17,7 @@ const customFonts = {
 export default function App() {
     const [isReady, setIsReady] = React.useState(false);
 
+    LogBox.ignoreAllLogs(true);
 
     const loadAppAplication = async () => {
         await Font.loadAsync(customFonts);

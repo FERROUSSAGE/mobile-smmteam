@@ -17,17 +17,21 @@ class Store {
         { label: 'ИК', value: 'ИК' },
         { label: 'FK', value: 'FK' }
     ];
+    totalCount = 0;
 
 
     constructor(){
         makeAutoObservable(this);
     }
 
-    async fetchOrders(limit, page) {
+    async fetchOrders(page) {
         try {
-            const { data: orders } = await httpGetOrders(limit, page);
-            if(orders.status)
-                this.orders = orders.response.rows;
+            const { data: orders } = await httpGetOrders(page);
+            if(orders.status){
+                this.orders = orders.response;
+                this.totalCount = orders.response.count;
+            }
+                
         } catch (e) { Alert.alert('Произошла ошибка при получении списка заказов!') }
     }
 
