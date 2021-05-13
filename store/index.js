@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { getResellers as httpGetResellers, getTypes as httpGetTypes } from '../https/reseller';
 import { getOrders as httpGetOrders } from '../https/order';
+import { getMessages as httpGetMessages } from '../https/telegram';
 import { Alert } from 'react-native';
 
 class Store {
@@ -9,6 +10,7 @@ class Store {
     orders = [];
     resellers = [];
     resellerTypes = [];
+    messages = [];
     payments = [
         { label: 'RK', value: 'RK' },
         { label: 'UP', value: 'UP' },
@@ -18,6 +20,7 @@ class Store {
         { label: 'FK', value: 'FK' }
     ];
     totalCount = 0;
+    socket = null;
 
 
     constructor(){
@@ -49,6 +52,14 @@ class Store {
             if(types.status)
                 this.resellerTypes = types.response;
         } catch (e) { Alert.alert('Произошла ошибка при получении списка типов ресселеров') }
+    }
+
+    async fetchMessages() {
+        try {
+            const { data: messages } = await httpGetMessages();
+            if(messages.status)
+                this.messages = messages.response;
+        } catch (e) { Alert.alert('Произошла ошибка при получении сообщений') }
     }
 }
 

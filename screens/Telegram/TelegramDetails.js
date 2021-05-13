@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 
 import Svg, { Path } from 'react-native-svg';
 import { AppTextBold, Flex, Container } from '../../components/styled';
-import { w, h } from '../../utils/consts';
+import { h } from '../../utils/consts';
 
 const SendInput = styled.TextInput`
     width: 85%;
@@ -15,17 +15,8 @@ const SendInput = styled.TextInput`
 const Message = styled.View`
     background: ${props => props.color ? 'rgba(72, 248, 205, 0.87)' : 'rgba(94, 80, 255, 0.87)'};
     border-radius: 10px;
-
-    width: ${props => 
-        props.width <= 2 
-        ? props.width * 20
-        : props.width <= 5
-        ? props.width * 15
-        : props.width <= 10
-        ? props.width * 10
-        : props.width * 5.4
-    }px;
     padding: 15px 10px;
+    width: 100%;
 `;
 
 const substrMessage = (message) => message.split(': ')[1];
@@ -37,13 +28,14 @@ const isOperatorMessage = (message) => {
     return message.split(':')[0] === 'Оператор' ? true : false;
 }
 
-const TelegramDetails = ({ route }) => {
-    const { nickname, chatId, messages } = route.params;
+const TelegramDetails = ({ route, socket }) => {
+    const { nickName, chatId, messages } = route.params;
+    const flatList = React.useRef(null);
 
     const sendMessageHandler = () => {
+        // socket.broadcast.emit('MESSAGE_ADD')
         Keyboard.dismiss();
     };
-
 
     return (
         <KeyboardAvoidingView
@@ -55,16 +47,19 @@ const TelegramDetails = ({ route }) => {
                 style={{ flex: 1 }}
             >
                 <FlatList
-                    contentContainerStyle={{ flex: 1, justifyContent: 'flex-end' }}
                     data={messages}
+                    ref={flatList}
+                    onRefresh={() => {}}
+                    refreshing={false}
+                    onContentSizeChange={() => flatList.current.scrollToEnd()}
+                    showsVerticalScrollIndicator={false}
                     renderItem={({item}) => {
                         const isOperator = isOperatorMessage(item);
                         return (
                             <Message
                                 style={{
                                     marginVertical: 5,
-                                    marginLeft: isOperator ? w * 0.2 : 0,
-                                    marginRight: !isOperator ? w * 0.2 : 0
+                                    alignItems: isOperator ? 'flex-end' : 'flex-start'
                                 }}
                                 color={isOperator}
                                 width={substrMessage(item).length}
@@ -76,7 +71,7 @@ const TelegramDetails = ({ route }) => {
                             </Message>
                         ); 
                     }}
-                    keyExtractor={item => item.toString(16)}
+                    keyExtractor={(item, i) => item.toString(16) + i}
                 />
             </Container>
             <Flex

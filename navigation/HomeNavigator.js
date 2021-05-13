@@ -35,7 +35,7 @@ const Avatar = styled.View`
 
 const HeaderTitle = (route) => {
 
-    const { nickname } = route.params;
+    const { nickName } = route.params;
     const navigation = useNavigation();
     const goBack = () => navigation.goBack();
 
@@ -62,14 +62,14 @@ const HeaderTitle = (route) => {
                 <AppTextBold
                     size='12px'
                 >
-                    {nameSurnameAbbreviation(nickname)}
+                    {nameSurnameAbbreviation(nickName)}
                 </AppTextBold>
             </Avatar>
             <AppTextBold
                 size='12px'
                 color='black'
             >
-                {nickname}
+                {nickName}
             </AppTextBold>
         </Flex>
     );

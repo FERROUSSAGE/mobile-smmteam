@@ -24,8 +24,7 @@ const ItemContent = styled(Flex)`
     borderBottomWidth: 2px; 
 `;
 
-const Item = ({ nickname, text }) => {
-
+const Item = ({ nickName, text }) => {
     return (
         <Flex
             direction='row'
@@ -35,7 +34,7 @@ const Item = ({ nickname, text }) => {
                 <AppTextBold
                     size='15px'
                 >
-                    {nameSurnameAbbreviation(nickname)}
+                    {nameSurnameAbbreviation(nickName)}
                 </AppTextBold>
             </Avatar>
             <ItemContent
@@ -45,7 +44,7 @@ const Item = ({ nickname, text }) => {
                     size='12px'
                     color='black'
                 >
-                    {nickname}
+                    {nickName}
                 </AppTextBold>
                 <AppTextBold
                     size='12px'
@@ -64,18 +63,18 @@ const Chat = ({ navigation, data }) => {
 
     const renderItem = ({item}) => (
         <TouchableOpacity onPress={() => goToDetails(item)}>
-            <Item nickname={item.nickname} text={item.messages[item.messages.length - 1]}/>
+            <Item nickName={item.nickName} text={item.messages[item.messages.length - 1]}/>
         </TouchableOpacity>
     );
 
     return (
         <Container
-            style={{ flex:1 }}
+            style={{ flex: 1 }}
         >
             <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={item => item.nickname}
+                keyExtractor={item => item.nickName}
             />
         </Container>
     );

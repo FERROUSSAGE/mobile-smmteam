@@ -52,7 +52,7 @@ const Adcore = observer(() => {
                     socialNetwork: socialNetwork.value,
                     link: link.value,
                     cost: +cost.value,
-                    spend: Math.floor(type.price * countOrdered.value),
+                    spend: type.price * countOrdered.value,
                     countOrdered: +countOrdered.value,
                     payment: payment.value,
                     resellerId: type.resellerId,

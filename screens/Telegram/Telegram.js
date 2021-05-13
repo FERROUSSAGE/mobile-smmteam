@@ -1,32 +1,29 @@
 import React from 'react';
 import Chat from '../../components/Chat';
 import { Flex } from '../../components/styled';
+import { RN_APP_API_URL } from '../../utils/consts';
 
-const data = [
-    {
-        nickname: 'Александр Волчанский',
-        messages: ['Александр Волчанский: Привет, у меня есть пару вопросов, собственно да',
-        'Оператор: Привет, у меня есть пару вопросов, собственно да'
-        ],
-        chatId: '4224412'
-    },
-    {
-        nickname: 'Снегирь Вологодский',
-        messages: ['Снегирь Волчанский: аs', 'Снегирь Волчанский: Как ты думаешь, существует ли?'],
-        chatId: '4224'
-    }
-];
+import { observer } from 'mobx-react-lite';
+
+import { io } from 'socket.io-client';
+
+import store from '../../store';
 
 
 
-const Telegram = ({ navigation }) => {
+const Telegram = observer(({ navigation }) => {
+
+    const socket = io(RN_APP_API_URL);
+    socket.on("connect", () => console.log(socket.id));
+
+
     return (
         <Flex
             flex={1}
         >
-            <Chat data={data} navigation={navigation} />
+            <Chat data={store.messages} navigation={navigation} />
         </Flex>
     );
-};
+});
 
 export {Telegram};

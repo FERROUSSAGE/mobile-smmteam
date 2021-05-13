@@ -30,7 +30,7 @@ const Cell = styled.View`
     
 `;
 
-const swipeoutButton = styled.View`
+const SwipeoutButton = styled.View`
     width: 80px;
     height: 80px;
     background-color: #B4C1CB;
@@ -140,16 +140,16 @@ const Orders = observer(() => {
                         />
                         {data && data.map((column, i) => (
                             <Swipeout
-                                key={i.toString(16)}
+                                key={data[i].idSmmcraft}
                                 autoClose={true}
                                 backgroundColor='transparent'
                                 buttonWidth={80}
                                 right={[
                                     {
-                                        component: () => <swipeoutButton/>,
+                                        component: () => <SwipeoutButton/>,
                                     },
                                     {
-                                        component: () => <swipeoutButton/>,
+                                        component: () => <SwipeoutButton/>,
                                         onPress: () => deleteOrderHandler(column[0]) 
                                     }
                                 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { Alert, SafeAreaView, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { LogBox } from 'react-native';
@@ -8,13 +8,17 @@ import AppNavigator from './navigation/AppNavigator';
 import { Flex } from './components/styled';
 import { h } from './utils/consts';
 
+import { observer } from 'mobx-react-lite';
+
+import store from './store';
+
 const customFonts = {
     'neometric-bold': require('./assets/fonts/Neometric-Bold.ttf'),
     'neometric-medium': require('./assets/fonts/Neometric-Medium.ttf'),
     'neometric-regular': require('./assets/fonts/Neometric-Regular.ttf')
 };
 
-export default function App() {
+export default observer(function App() {
     const [isReady, setIsReady] = React.useState(false);
 
     LogBox.ignoreAllLogs(true);
@@ -26,6 +30,10 @@ export default function App() {
 
     React.useEffect(() => {
         loadAppAplication();
+        store.fetchResellerTypes();
+        store.fetchResellers();
+        store.fetchOrders();
+        store.fetchMessages()
     }, []);
 
     if (isReady) {
@@ -42,4 +50,4 @@ export default function App() {
     } else {
         return <AppLoading/>
     }
-}
+})

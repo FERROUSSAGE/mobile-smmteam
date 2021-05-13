@@ -48,7 +48,7 @@ const Stream = observer(() => {
                 socialNetwork: service.value === 1 ? 'YouTube' : 'Twitch',
                 link,
                 cost: +cost.value,
-                spend: enabledLikes ? Math.floor(resellerType.price * countOrdered.value) : 0,
+                spend: enabledLikes ? resellerType.price * countOrdered.value : 0,
                 countOrdered: +countOrdered.value,
                 payment: payment.value,
                 resellerId: enabledLikes ? resellerType.resellerId : null,
