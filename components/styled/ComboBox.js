@@ -5,7 +5,6 @@ import { Platform } from 'react-native';
 import { Colors } from '../../utils/consts';
 
 const ComboBox = ({items, placeholder, index, onChangeItem, value}) => {
-    
     return (
         <DropDownPicker
             items={items}

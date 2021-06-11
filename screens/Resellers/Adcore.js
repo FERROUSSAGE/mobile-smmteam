@@ -4,7 +4,7 @@ import { Flex, InputReseller, Button, AppTextMedium, ComboBox } from '../../comp
 import { w } from '../../utils/consts';
 import { createAdcore as httpCreate } from '../../https/api';
 import { createOrder as httpCreateOrder } from '../../https/order';
-import { getItems, checkOrder, clearFields } from '../../utils/functions';
+import { getItems, checkOrder, clearFields, rounded, check } from '../../utils/functions';
 
 import { observer } from 'mobx-react-lite';
 
@@ -19,7 +19,8 @@ const Adcore = observer(() => {
         link = useInput(''),
         countOrdered = useInput(''),
         payment = useComboBox(null),
-        cost = useInput('');
+        cost = useInput(''),
+        [toggleDisabledButton, setToggleDisabledButton] = React.useState(false);
 
     const types = store.resellerTypes.filter(item => item.resellerId === 1);
 
@@ -29,44 +30,59 @@ const Adcore = observer(() => {
 
     const createOrderHandler = async () => {
         try {
-            if(!socialNetwork.value || !resellerType.value || !idSmmcraft.value || !link.value || !countOrdered.value || !payment.value || !cost.value)
-                return Alert.alert('Заполните все поля ввода!');
-            
-            const type = types.find(item => item.type === resellerType.value);
+            setToggleDisabledButton(true);
+            const valid = check([
+                [idSmmcraft.value, 'number'],
+                [socialNetwork.value, 'number'],
+                [resellerType.value, 'empty'],
+                [link.value, 'link'],
+                [countOrdered.value, 'number'],
+                [payment.value, 'text'],
+                [cost.value, 'number']
+            ]);
 
-            const check = await checkOrder(idSmmcraft.value);
-            if(check)
-                return Alert.alert(check);
-
-            const { data: adcore } = await httpCreate(resellerType.value, link.value, countOrdered.value, type.price);
-            const target = adcore.response;
-
-            if(!adcore.status){
-                return Alert.alert(target.msg);
+            if(valid.length > 0){
+                valid.forEach(error => Alert.alert('Прозошла ошибка!', error));
             }
+            else {
+                const type = types.find(item => item.type === resellerType.value);
 
-            try {
-                const { data: order } = await httpCreateOrder({
-                    idSmmcraft: +idSmmcraft.value,
-                    idProject: +target.idProject,
-                    socialNetwork: socialNetwork.value,
-                    link: link.value,
-                    cost: +cost.value,
-                    spend: type.price * countOrdered.value,
-                    countOrdered: +countOrdered.value,
-                    payment: payment.value,
-                    resellerId: type.resellerId,
-                    resellerTypeId: type.id,
-                    userId: store.user.id
-                });
-
-                if(order.status){
-                    clearFields([idSmmcraft, link, countOrdered, cost]);
-                    return Alert.alert('Заказ успешно создан!')
+                const check = await checkOrder(idSmmcraft.value);
+                if(check)
+                    return Alert.alert(check);
+    
+                const { data: adcore } = await httpCreate(resellerType.value, link.value, countOrdered.value, type.price);
+                const target = adcore.response;
+    
+                if(!adcore.status){
+                    return Alert.alert(target.msg);
                 }
-
-            } catch (e) { Alert.alert('Произошла ошибка!') }
+    
+                try {
+                    const { data: order } = await httpCreateOrder({
+                        idSmmcraft: +idSmmcraft.value,
+                        idProject: +target.idProject,
+                        socialNetwork: socialNetwork.value,
+                        link: link.value,
+                        cost: +cost.value,
+                        spend: rounded(type.price * countOrdered.value),
+                        countOrdered: +countOrdered.value,
+                        payment: payment.value,
+                        resellerId: type.resellerId,
+                        resellerTypeId: type.id,
+                        userId: store.user[0].id
+                    });
+    
+                    if(order.status){
+                        clearFields([idSmmcraft, link, countOrdered, cost]);
+                        store.fetchBalances();
+                        return Alert.alert('Заказ успешно создан!')
+                    }
+    
+                } catch (e) { Alert.alert('Произошла ошибка!') }
+            } 
         } catch (e) { Alert.alert('Произошла ошибка!') }
+        finally { setToggleDisabledButton(false); }
         
     }
 
@@ -120,14 +136,15 @@ const Adcore = observer(() => {
                     height='50px'
                     width='165px'
                     style={{ paddingVertical: 15, marginLeft: w / 6}}
-                    onPress={() => createOrderHandler()}
+                    onPress={createOrderHandler}
+                    disabled={toggleDisabledButton}
                 >
                     <AppTextMedium
                         style={{ textAlign: 'center' }}
                     >
                         Заказать
                     </AppTextMedium>
-                </Button>                
+                </Button>
             </Flex>   
             
         </KeyboardAvoidingView>

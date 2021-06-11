@@ -34,6 +34,7 @@ export default observer(function App() {
         store.fetchResellers();
         store.fetchOrders();
         store.fetchMessages()
+        store.fetchBalances();
     }, []);
 
     if (isReady) {

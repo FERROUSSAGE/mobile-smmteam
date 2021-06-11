@@ -18,8 +18,10 @@ const Content = styled.View`
 `;
 
 const Button = (props) => {
-    const { onPress } = props;
-    return <TouchableOpacity  onPress={onPress} >
+    const { onPress, disabled } = props;
+    return <TouchableOpacity  
+        onPress={onPress}
+        disabled={disabled}>
         <Content {...props} />
     </TouchableOpacity>
 } 

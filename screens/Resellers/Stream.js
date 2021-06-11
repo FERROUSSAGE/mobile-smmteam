@@ -5,7 +5,7 @@ import { useInput, useComboBox } from '../../hooks';
 import { createAdcore as httpCreateAdcore } from '../../https/api';
 import { createOrder as httpCreateOrder } from '../../https/order';
 import { startStream as httpStartSream } from '../../https/streambooster';
-import { checkOrder, clearFields } from '../../utils/functions';
+import { checkOrder, clearFields, check, rounded } from '../../utils/functions';
 
 import { observer } from 'mobx-react-lite';
 
@@ -22,7 +22,8 @@ const Stream = observer(() => {
         countOrdered = useInput(''),
         payment = useComboBox(null),
         cost = useInput(''),
-        countViews = useInput('');
+        countViews = useInput(''),
+        [toggleDisabledButton, setToggleDisabledButton] = React.useState(false);
 
     const link = `https://youtu.be/${uuid.value}`;
     const resellerType = store.resellerTypes.find(item => item.name === 'YouTube' && item.resellerId === 1 && item.type === "4");
@@ -34,6 +35,7 @@ const Stream = observer(() => {
 
             if(stream.status){
                 withLikes ? createOrder(true) : createOrder();
+                store.fetchBalances();
                 return Alert.alert(`${target.msg}\n ${target.uuid}`);
             }
             Alert.alert(target.msg);
@@ -45,15 +47,15 @@ const Stream = observer(() => {
         try {
             const { data: order } = await httpCreateOrder({
                 idSmmcraft: +idSmmcraft.value,
-                socialNetwork: service.value === 1 ? 'YouTube' : 'Twitch',
+                socialNetwork: service.value == 1 ? 'YouTube' : 'Twitch',
                 link,
                 cost: +cost.value,
-                spend: enabledLikes ? resellerType.price * countOrdered.value : 0,
+                spend: enabledLikes ? rounded(resellerType.price * countOrdered.value) : 0,
                 countOrdered: +countOrdered.value,
                 payment: payment.value,
                 resellerId: enabledLikes ? resellerType.resellerId : null,
                 resellerTypeId: enabledLikes ?resellerType.id : null,
-                userId: store.user.id,
+                userId: store.user[0].id,
                 countViews: countViews.value
             });
 
@@ -64,19 +66,35 @@ const Stream = observer(() => {
     }
 
     const createOrderHandler = async () => {
+        try {
+            setToggleDisabledButton(true);
 
-        if(!service.value || !uuid.value || !threads.value)
-            return Alert.alert('Заполните все поля ввода!');
+            const valid = check([
+                [idSmmcraft.value, 'number'],
+                [cost.value, 'number'],
+                [countViews.value, 'number'],
+                [payment.value, 'text'],
+                [service.value, 'number'],
+                [uuid.value, 'uid'],
+                [threads.value, 'number'],
+                [timer.value, 'number']
+            ]);
+    
+            if(valid.length > 0){
+                valid.forEach(error => Alert.alert('Прозошла ошибка!', error));
+            } else {
+                const check = await checkOrder(idSmmcraft.value)
+                if(check)
+                    return Alert.alert(check);
         
-        const check = await checkOrder(idSmmcraft.value)
-        if(check)
-            return Alert.alert(check);
+                if(!countOrdered.value) return enableStream();    
+        
+                const { data: adcore } = await httpCreateAdcore(resellerType.type, link, countOrdered.value, resellerType.price);
+                if(adcore.status) return enableStream(true);
+            }
 
-        if(!countOrdered.value) return enableStream();    
-
-        const { data: adcore } = await httpCreateAdcore(resellerType.type, link, countOrdered.value, resellerType.price);
-        if(adcore.status) return enableStream(true);
-
+        } catch (e) { Alert.alert('Запуск стрима', 'Произошла ошибка при запуске стрима!'); }
+        finally { setToggleDisabledButton(false); }
     }   
     
     return (
@@ -135,6 +153,7 @@ const Stream = observer(() => {
                     width='165px'
                     style={{ paddingVertical: 15, marginLeft: w / 6}}
                     onPress={createOrderHandler}
+                    disabled={toggleDisabledButton}
                 >
                     <AppTextMedium
                         style={{ textAlign: 'center' }}

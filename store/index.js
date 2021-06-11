@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import { getResellers as httpGetResellers, getTypes as httpGetTypes } from '../https/reseller';
 import { getOrders as httpGetOrders } from '../https/order';
 import { getMessages as httpGetMessages } from '../https/telegram';
+import { balanceAdcore, balanceSpanel, balanceVktarget, balanceSmmok } from '../https/api';
 import { Alert } from 'react-native';
 
 class Store {
@@ -10,6 +11,7 @@ class Store {
     orders = [];
     resellers = [];
     resellerTypes = [];
+    balances = [];
     messages = [];
     payments = [
         { label: 'RK', value: 'RK' },
@@ -60,6 +62,23 @@ class Store {
             if(messages.status)
                 this.messages = messages.response;
         } catch (e) { Alert.alert('Произошла ошибка при получении сообщений') }
+    }
+
+    async fetchBalances(){
+        try {
+            this.balances = [];
+
+            const { data: adcoreBalance } = await balanceAdcore();
+            const { data: smmokBalance } = await balanceSmmok();
+            const { data: spanelBalance } = await balanceSpanel();
+            const { data: vktargetBalance } = await balanceVktarget();
+
+            if(adcoreBalance.status) this.balances.push([adcoreBalance.response.balance]);
+            if(smmokBalance.status) this.balances.push([smmokBalance.response.balance]);
+            if(spanelBalance.status) this.balances.push([spanelBalance.response.balance]);
+            if(vktargetBalance.status) this.balances.push([vktargetBalance.response.balance]);
+
+        } catch (e) { Alert.alert('Произошла ошибка при получении баланса реселлеров!') }
     }
 }
 

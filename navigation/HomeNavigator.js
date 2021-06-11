@@ -10,7 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import ResellerNavigator from './ResellerNavigator';
 
-import { HomeScreen, MailScreen, OrdersScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
+import { HomeScreen, MailScreen, OrdersScreen, OrderDetailsScreen, TelegramScreen, TelegramDetailsScreen } from '../screens';
 import { HeaderMenu } from '../components/HeaderMenu';
 
 import { Flex, AppTextBold, Button } from '../components/styled';
@@ -35,7 +35,7 @@ const Avatar = styled.View`
 
 const HeaderTitle = (route) => {
 
-    const { nickName } = route.params;
+    const { nickName, order } = route.params;
     const navigation = useNavigation();
     const goBack = () => navigation.goBack();
 
@@ -57,20 +57,44 @@ const HeaderTitle = (route) => {
                     </G>
                 </Svg>
             </Button>
-
-            <Avatar>
-                <AppTextBold
-                    size='12px'
-                >
-                    {nameSurnameAbbreviation(nickName)}
-                </AppTextBold>
-            </Avatar>
-            <AppTextBold
-                size='12px'
-                color='black'
-            >
-                {nickName}
-            </AppTextBold>
+            {order
+                ?
+                    <Flex
+                        flex={1}
+                        direction='row'
+                        alignItems='center'>
+                        <AppTextBold
+                            style={{ marginLeft: 10 }}
+                            size='16px'
+                            color={Colors.titleStack}>
+                            Заказ: 
+                        </AppTextBold>
+                        <AppTextBold
+                            style={{ marginLeft: 10 }}
+                            size='14px'
+                            color={Colors.titleStack}>
+                                {order.idSmmcraft}
+                        </AppTextBold>
+                    </Flex>
+                : <Flex
+                    flex={1}
+                    direction='row'
+                    alignItems='center'>
+                    <Avatar>
+                        <AppTextBold
+                            size='12px'
+                        >
+                            {nameSurnameAbbreviation(nickName)}
+                        </AppTextBold>
+                    </Avatar>
+                    <AppTextBold
+                        size='12px'
+                        color='black'
+                    >
+                        {nickName}
+                    </AppTextBold>
+                </Flex>
+            }
         </Flex>
     );
 }
@@ -130,6 +154,15 @@ const _OrdersStack = () => (
                 headerTitleStyle: styles.title,
                 headerRight: () =>  <HeaderMenu {...route} />                  
             })}
+        />
+        <Stack.Screen
+            name='OrderDetails'
+            component={OrderDetailsScreen}
+            options={({ route }) => ({
+                headerLeft: null,
+                headerTitleAlign: 'left',
+                headerTitle: () => <HeaderTitle {...route} />
+            })} 
         />
     </Stack.Navigator>
 ); 

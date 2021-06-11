@@ -9,6 +9,7 @@ import eye from '../assets/icons/eye.png';
 import { useInput } from '../hooks';
 import { login as httpLogin} from '../https/any';
 import { observer } from 'mobx-react-lite';
+import { check } from '../utils/functions';
 
 import store from '../store';
 
@@ -45,12 +46,18 @@ const Login = observer(({ navigation }) => {
 
     const logInHandler = async () => {
         try{
-            let { data: user } = await httpLogin(login.value, password.value);
-            if(user.status) {
-                store.user = user.response
-                goToHomeHandler();
+            
+            const valid = check([[login.value, 'loginAndPassword'], [password.value, 'loginAndPassword']]);
+            if(valid.length > 0){
+                valid.forEach(error => Alert.alert('Прозошла ошибка!', error));
             }
-            goToHomeHandler();
+            else {
+                let { data: user } = await httpLogin(login.value, password.value);
+                if(user.status) {
+                    store.user = user.response
+                    return goToHomeHandler();
+                }
+            }
         } catch(e){
             Alert.alert('Логин либо пароль неверны!');
         }
