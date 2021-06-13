@@ -15,35 +15,35 @@ const Reseller = observer(() => {
             <Container style={{ marginHorizontal: 10, marginVertical: 10 }}>
                 <AppTextBold 
                     style={{marginVertical: 10 }}
-                    size='24px' 
+                    size='20px' 
                     color={Colors.titleStack}>Баланс реселлеров:</AppTextBold>
                 <AppTextRegular
                     style={{marginVertical: 10 }}
                     size='20px'
                     color={Colors.titleStack}
                 >
-                    Adcore — <AppTextMedium size='18px' color={Colors.blue}> {store.balances[0][0]} руб.</AppTextMedium>
+                    Adcore — <AppTextMedium size='18px' color={Colors.blue}> {store.balances.adcore} руб.</AppTextMedium>
                 </AppTextRegular>
                 <AppTextRegular
                     style={{marginVertical: 10 }}
                     size='20px'
                     color={Colors.titleStack}
                 >
-                    SMMOK-FB — <AppTextMedium size='18px' color={Colors.blue}> {store.balances[1][0]} руб.</AppTextMedium>
+                    SMMOK-FB — <AppTextMedium size='18px' color={Colors.blue}> {store.balances.smmok} руб.</AppTextMedium>
                 </AppTextRegular>
                 <AppTextRegular
                     style={{marginVertical: 10 }}
                     size='20px'
                     color={Colors.titleStack}
                 >
-                    VKTarget — <AppTextMedium size='18px' color={Colors.blue}> {store.balances[3][0]} руб.</AppTextMedium>
+                    VKTarget — <AppTextMedium size='18px' color={Colors.blue}> {store.balances.vktarget} руб.</AppTextMedium>
                 </AppTextRegular>
                 <AppTextRegular
                     style={{marginVertical: 10 }}
                     size='20px'
                     color={Colors.titleStack}
                 >
-                    SocialPanel — <AppTextMedium size='18px' color={Colors.blue}> {store.balances[2][0]} руб.</AppTextMedium>
+                    SocialPanel — <AppTextMedium size='18px' color={Colors.blue}> {store.balances.spanel} руб.</AppTextMedium>
                 </AppTextRegular>
             </Container>
             <Flex 

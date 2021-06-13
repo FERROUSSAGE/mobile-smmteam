@@ -11,7 +11,12 @@ class Store {
     orders = [];
     resellers = [];
     resellerTypes = [];
-    balances = [];
+    balances = {
+        adcore: 0,
+        smmok: 0,
+        spanel: 0,
+        vktarget: 0
+    };
     messages = [];
     payments = [
         { label: 'RK', value: 'RK' },
@@ -66,17 +71,16 @@ class Store {
 
     async fetchBalances(){
         try {
-            this.balances = [];
 
             const { data: adcoreBalance } = await balanceAdcore();
             const { data: smmokBalance } = await balanceSmmok();
             const { data: spanelBalance } = await balanceSpanel();
             const { data: vktargetBalance } = await balanceVktarget();
 
-            if(adcoreBalance.status) this.balances.push([adcoreBalance.response.balance]);
-            if(smmokBalance.status) this.balances.push([smmokBalance.response.balance]);
-            if(spanelBalance.status) this.balances.push([spanelBalance.response.balance]);
-            if(vktargetBalance.status) this.balances.push([vktargetBalance.response.balance]);
+            if(adcoreBalance.status) this.balances.adcore = adcoreBalance.response.balance;
+            if(smmokBalance.status) this.balances.smmok = smmokBalance.response.balance;
+            if(spanelBalance.status) this.balances.spanel = spanelBalance.response.balance;
+            if(vktargetBalance.status) this.balances.vktarget = vktargetBalance.response.balance;
 
         } catch (e) { Alert.alert('Произошла ошибка при получении баланса реселлеров!') }
     }
